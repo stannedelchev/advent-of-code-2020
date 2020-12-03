@@ -1,16 +1,24 @@
 mod common;
 mod day01;
+mod day02;
 
 use crate::day01::Day01;
+use crate::day02::Day02;
 use common::Problem;
+use common::ProblemFactory;
 use std::time::Duration;
 
+#[macro_use] extern crate lazy_static;
+
 fn main() {
-    let days = [&Day01::from_file("inputs/Day01.txt")];
-    let days = days.iter().enumerate();
-    for (idx, &day) in days {
-        let (part1_time, part1_result) = time(|| day.part1(), 10000);
-        let (part2_time, part2_result) = time(|| day.part2(), 10000);
+    let days: Vec<Box<dyn Problem>> = vec!(
+                        Box::from(Day01::new(&read_file("inputs/Day01.txt"))),
+                        Box::from(Day02::new(&read_file("inputs/Day02.txt")))
+                );
+    let days = days.into_iter().enumerate();
+    for (idx, day) in days {
+        let (part1_time, part1_result) = time(|| (*day).part1(), 1);
+        let (part2_time, part2_result) = time(|| (*day).part2(), 1);
         println!(
             "Day {} part 1: {} in {}sec",
             idx + 1,
@@ -33,7 +41,7 @@ where
     let mut durations = Vec::<Duration>::new();
     let mut result: String = String::new();
 
-    for i in 0..=loops {
+    for _ in 0..=loops {
         let now = std::time::Instant::now();
         result = func();
         durations.push(now.elapsed());
@@ -49,4 +57,8 @@ where
 
     let average_duration = total_duration.div_f32(durations.len() as f32);
     (average_duration, result)
+}
+
+fn read_file(filename: &str) -> String {
+    std::fs::read_to_string(filename).unwrap()
 }
