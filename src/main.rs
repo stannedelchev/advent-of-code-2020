@@ -1,9 +1,11 @@
 mod common;
 mod day01;
 mod day02;
+mod day03;
 
 use crate::day01::Day01;
 use crate::day02::Day02;
+use crate::day03::Day03;
 use common::Problem;
 use common::ProblemFactory;
 use std::time::Duration;
@@ -13,7 +15,8 @@ use std::time::Duration;
 fn main() {
     let days: Vec<Box<dyn Problem>> = vec!(
                         Box::from(Day01::new(&read_file("inputs/Day01.txt"))),
-                        Box::from(Day02::new(&read_file("inputs/Day02.txt")))
+                        Box::from(Day02::new(&read_file("inputs/Day02.txt"))),
+                        Box::from(Day03::new(&read_file("inputs/Day03.txt")))
                 );
     let days = days.into_iter().enumerate();
     for (idx, day) in days {
