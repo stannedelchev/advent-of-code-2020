@@ -2,10 +2,12 @@ mod common;
 mod day01;
 mod day02;
 mod day03;
+mod day04;
 
 use crate::day01::Day01;
 use crate::day02::Day02;
 use crate::day03::Day03;
+use crate::day04::Day04;
 use common::Problem;
 use common::ProblemFactory;
 use std::time::Duration;
@@ -14,28 +16,36 @@ use std::time::Duration;
 extern crate lazy_static;
 
 fn main() {
-    let days: Vec<Box<dyn Problem>> = vec![
-        Box::from(Day01::new(&read_file("inputs/Day01.txt"))),
-        Box::from(Day02::new(&read_file("inputs/Day02.txt"))),
-        Box::from(Day03::new(&read_file("inputs/Day03.txt"))),
-    ];
-    let days = days.into_iter().enumerate();
-    for (idx, day) in days {
-        let (part1_time, part1_result) = time(|| (*day).part1(), 1000);
-        let (part2_time, part2_result) = time(|| (*day).part2(), 1000);
-        println!(
-            "Day {} part 1: {} in {}sec",
-            idx + 1,
-            part1_result,
-            part1_time.as_secs_f64()
-        );
-        println!(
-            "Day {} part 2: {} in {}sec",
-            idx + 1,
-            part2_result,
-            part2_time.as_secs_f64()
-        );
-    }
+    let (total_time, _) = time(
+        || {
+            let days: Vec<Box<dyn Problem>> = vec![
+                Box::from(Day01::new(&read_file("inputs/Day01.txt"))),
+                Box::from(Day02::new(&read_file("inputs/Day02.txt"))),
+                Box::from(Day03::new(&read_file("inputs/Day03.txt"))),
+                Box::from(Day04::new(&read_file("inputs/Day04.txt"))),
+            ];
+            let days = days.into_iter().enumerate();
+            for (idx, day) in days {
+                let (part1_time, part1_result) = time(|| (*day).part1(), 1);
+                let (part2_time, part2_result) = time(|| (*day).part2(), 1);
+                println!(
+                    "Day {} part 1: {} in {}sec",
+                    idx + 1,
+                    part1_result,
+                    part1_time.as_secs_f64()
+                );
+                println!(
+                    "Day {} part 2: {} in {}sec",
+                    idx + 1,
+                    part2_result,
+                    part2_time.as_secs_f64()
+                );
+            }
+            "".to_string()
+        },
+        1,
+    );
+    println!("Total time: {}sec", total_time.as_secs_f64());
 }
 
 fn time<F>(func: F, loops: usize) -> (Duration, String)
