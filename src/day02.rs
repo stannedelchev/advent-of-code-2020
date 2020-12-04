@@ -3,7 +3,7 @@ use regex::Regex;
 use std::collections::HashMap;
 
 pub struct Day02 {
-    passwords: Vec<PasswordLine>
+    passwords: Vec<PasswordLine>,
 }
 
 #[derive(Debug)]
@@ -11,13 +11,16 @@ pub struct PasswordLine {
     num1: u32,
     num2: u32,
     letter: char,
-    password: String
+    password: String,
 }
 
 impl From<&str> for PasswordLine {
     fn from(s: &str) -> Self {
         lazy_static! {
-            static ref REGEX: Regex = Regex::new(r"(?P<min>[\d]{1,3})-(?P<max>[\d]{1,3}) (?P<letter>[a-z]): (?P<password>[a-z]+)").unwrap();
+            static ref REGEX: Regex = Regex::new(
+                r"(?P<min>[\d]{1,3})-(?P<max>[\d]{1,3}) (?P<letter>[a-z]): (?P<password>[a-z]+)"
+            )
+            .unwrap();
         }
 
         let content = REGEX.captures_iter(s).next().unwrap();
@@ -26,27 +29,27 @@ impl From<&str> for PasswordLine {
             num1: content["min"].parse::<u32>().unwrap(),
             num2: content["max"].parse::<u32>().unwrap(),
             letter: content["letter"].chars().next().unwrap(),
-            password : content["password"].to_string()
+            password: content["password"].to_string(),
         }
     }
 }
 
-impl ProblemFactory for Day02{
+impl ProblemFactory for Day02 {
     fn new(input: &str) -> Self {
         let passwords: Vec<PasswordLine> = input.lines().map(|l| l.into()).collect();
-        Day02 {
-            passwords
-        }
+        Day02 { passwords }
     }
 }
 
 impl Problem for Day02 {
     fn part1(&self) -> String {
-        let wrong_passwords = self.passwords.iter()
+        let wrong_passwords = self
+            .passwords
+            .iter()
             .filter(|l| {
                 let mut map: HashMap<char, u32> = HashMap::new();
                 for c in l.password.chars() {
-                    map .insert(c, map.get(&c).map_or_else(|| 1, |count| *count + 1));
+                    map.insert(c, map.get(&c).map_or_else(|| 1, |count| *count + 1));
                 }
 
                 let letter = &l.letter;
@@ -62,13 +65,30 @@ impl Problem for Day02 {
     }
 
     fn part2(&self) -> String {
-        let wrong_passwords = self.passwords.iter()
+        let wrong_passwords = self
+            .passwords
+            .iter()
             .filter(|l| {
-                let c1 = l.password.chars().nth((l.num1 - 1) as usize).unwrap();
-                let c2 = l.password.chars().nth((l.num2 - 1) as usize).unwrap();
-
                 let letter = l.letter;
-                return (c1 == letter || c2 == letter) && c1 != c2;
+                let mut char_idx = 0;
+                let mut seen = 0;
+                for c in l.password.chars() {
+                    char_idx += 1;
+
+                    if (char_idx == l.num1) && c == letter {
+                        seen += 1;
+                        continue;
+                    }
+
+                    if char_idx == l.num2 {
+                        if c == letter {
+                            seen += 1;
+                        }
+                        break;
+                    }
+                }
+
+                seen == 1
             })
             .count();
 

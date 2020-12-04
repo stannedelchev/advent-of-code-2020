@@ -10,18 +10,19 @@ use common::Problem;
 use common::ProblemFactory;
 use std::time::Duration;
 
-#[macro_use] extern crate lazy_static;
+#[macro_use]
+extern crate lazy_static;
 
 fn main() {
-    let days: Vec<Box<dyn Problem>> = vec!(
-                        Box::from(Day01::new(&read_file("inputs/Day01.txt"))),
-                        Box::from(Day02::new(&read_file("inputs/Day02.txt"))),
-                        Box::from(Day03::new(&read_file("inputs/Day03.txt")))
-                );
+    let days: Vec<Box<dyn Problem>> = vec![
+        Box::from(Day01::new(&read_file("inputs/Day01.txt"))),
+        Box::from(Day02::new(&read_file("inputs/Day02.txt"))),
+        Box::from(Day03::new(&read_file("inputs/Day03.txt"))),
+    ];
     let days = days.into_iter().enumerate();
     for (idx, day) in days {
-        let (part1_time, part1_result) = time(|| (*day).part1(), 1);
-        let (part2_time, part2_result) = time(|| (*day).part2(), 1);
+        let (part1_time, part1_result) = time(|| (*day).part1(), 1000);
+        let (part2_time, part2_result) = time(|| (*day).part2(), 1000);
         println!(
             "Day {} part 1: {} in {}sec",
             idx + 1,
