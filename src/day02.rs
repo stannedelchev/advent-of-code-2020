@@ -1,6 +1,5 @@
 use crate::common::{Problem, ProblemFactory};
 use regex::Regex;
-use std::collections::HashMap;
 
 pub struct Day02 {
     passwords: Vec<PasswordLine>,
@@ -8,8 +7,8 @@ pub struct Day02 {
 
 #[derive(Debug)]
 pub struct PasswordLine {
-    num1: u32,
-    num2: u32,
+    num1: usize,
+    num2: usize,
     letter: char,
     password: String,
 }
@@ -26,8 +25,8 @@ impl From<&str> for PasswordLine {
         let content = REGEX.captures_iter(s).next().unwrap();
 
         PasswordLine {
-            num1: content["min"].parse::<u32>().unwrap(),
-            num2: content["max"].parse::<u32>().unwrap(),
+            num1: content["min"].parse::<usize>().unwrap(),
+            num2: content["max"].parse::<usize>().unwrap(),
             letter: content["letter"].chars().next().unwrap(),
             password: content["password"].to_string(),
         }
@@ -47,17 +46,19 @@ impl Problem for Day02 {
             .passwords
             .iter()
             .filter(|l| {
-                let mut map: HashMap<char, u32> = HashMap::new();
+                const ASCII_SMALL_LETTERS_STARTPOINT: usize = 97;
+                const ALPHABET_LENGTH: usize = 26;
+
+                let mut letter_occurrences: [usize; ALPHABET_LENGTH] = [0; ALPHABET_LENGTH];
+
                 for c in l.password.chars() {
-                    map.insert(c, map.get(&c).map_or_else(|| 1, |count| *count + 1));
+                    letter_occurrences[c as usize - ASCII_SMALL_LETTERS_STARTPOINT] += 1;
                 }
 
-                let letter = &l.letter;
-                if !&map.contains_key(letter) {
-                    return false;
-                }
-                let occurrences = (&map).get(letter).unwrap();
-                return l.num1 <= *occurrences && *occurrences <= l.num2;
+                let occurrences =
+                    letter_occurrences[l.letter as usize - ASCII_SMALL_LETTERS_STARTPOINT];
+
+                l.num1 <= occurrences && occurrences <= l.num2
             })
             .count();
 
