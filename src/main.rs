@@ -3,11 +3,13 @@ mod day01;
 mod day02;
 mod day03;
 mod day04;
+mod day05;
 
 use crate::day01::Day01;
 use crate::day02::Day02;
 use crate::day03::Day03;
 use crate::day04::Day04;
+use crate::day05::Day05;
 use common::Problem;
 use common::ProblemFactory;
 use std::time::Duration;
@@ -23,6 +25,7 @@ fn main() {
                 Box::from(Day02::new(&read_file("inputs/Day02.txt"))),
                 Box::from(Day03::new(&read_file("inputs/Day03.txt"))),
                 Box::from(Day04::new(&read_file("inputs/Day04.txt"))),
+                Box::from(Day05::new(&read_file("inputs/Day05.txt"))),
             ];
             let days = days.into_iter().enumerate();
             for (idx, day) in days {
@@ -55,7 +58,7 @@ where
     let mut durations = Vec::<Duration>::new();
     let mut result: String = String::new();
 
-    for _ in 0..=loops {
+    for _ in 0..loops {
         let now = std::time::Instant::now();
         result = func();
         durations.push(now.elapsed());
