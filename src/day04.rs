@@ -1,4 +1,4 @@
-use crate::common::{Problem, ProblemFactory};
+use crate::common::Problem;
 use regex::Regex;
 use std::collections::HashMap;
 use std::str::Lines;
@@ -62,11 +62,9 @@ impl Passport<'_> {
     }
 }
 
-impl<'a> ProblemFactory for Day04 {
-    fn new(input: &str) -> Self {
-        Day04 {
-            input: input.to_string(),
-        }
+impl Day04 {
+    pub fn new(input: String) -> Self {
+        Day04 { input }
     }
 }
 

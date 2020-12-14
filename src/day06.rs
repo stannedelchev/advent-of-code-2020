@@ -1,14 +1,12 @@
-use crate::common::{Problem, ProblemFactory};
+use crate::common::Problem;
 
 pub struct Day06 {
     input: String,
 }
 
-impl ProblemFactory for Day06 {
-    fn new(input: &str) -> Self {
-        Day06 {
-            input: input.to_owned(),
-        }
+impl Day06 {
+    pub fn new(input: String) -> Self {
+        Day06 { input }
     }
 }
 

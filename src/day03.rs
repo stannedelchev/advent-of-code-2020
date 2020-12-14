@@ -1,4 +1,4 @@
-use crate::common::{Problem, ProblemFactory};
+use crate::common::Problem;
 use std::fmt::Debug;
 
 pub struct Day03 {
@@ -17,8 +17,8 @@ struct XyTuple {
     y: usize,
 }
 
-impl ProblemFactory for Day03 {
-    fn new(input: &str) -> Self {
+impl Day03 {
+    pub fn new(input: String) -> Self {
         let mut rows = Vec::<Vec<Location>>::new();
         for line in input.lines() {
             let line_as_nums = line

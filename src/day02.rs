@@ -1,4 +1,4 @@
-use crate::common::{Problem, ProblemFactory};
+use crate::common::Problem;
 use regex::Regex;
 
 pub struct Day02 {
@@ -33,8 +33,8 @@ impl From<&str> for PasswordLine {
     }
 }
 
-impl ProblemFactory for Day02 {
-    fn new(input: &str) -> Self {
+impl Day02 {
+    pub fn new(input: String) -> Self {
         let passwords: Vec<PasswordLine> = input.lines().map(|l| l.into()).collect();
         Day02 { passwords }
     }

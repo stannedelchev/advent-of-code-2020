@@ -1,14 +1,13 @@
-use crate::common::{Problem, ProblemFactory};
+use crate::common::Problem;
 
 pub struct Day05 {
     input: Vec<usize>,
 }
 
-impl ProblemFactory for Day05 {
-    fn new(input: &str) -> Self {
+impl Day05 {
+    pub fn new(input: String) -> Self {
         Day05 {
             input: input
-                .to_string()
                 .replace("B", "1")
                 .replace("F", "0")
                 .replace("R", "1")

@@ -5,6 +5,7 @@ mod day03;
 mod day04;
 mod day05;
 mod day06;
+mod day07;
 
 use crate::day01::Day01;
 use crate::day02::Day02;
@@ -12,8 +13,8 @@ use crate::day03::Day03;
 use crate::day04::Day04;
 use crate::day05::Day05;
 use crate::day06::Day06;
+use crate::day07::Day07;
 use common::Problem;
-use common::ProblemFactory;
 use std::time::Duration;
 
 #[macro_use]
@@ -23,14 +24,15 @@ fn main() {
     let (total_time, _) = time(
         || {
             let days: Vec<Box<dyn Problem>> = vec![
-                Box::from(Day01::new(&read_file("inputs/Day01.txt"))),
-                Box::from(Day02::new(&read_file("inputs/Day02.txt"))),
-                Box::from(Day03::new(&read_file("inputs/Day03.txt"))),
-                Box::from(Day04::new(&read_file("inputs/Day04.txt"))),
-                Box::from(Day05::new(&read_file("inputs/Day05.txt"))),
-                Box::from(Day06::new(&read_file("inputs/Day06.txt"))),
+                Box::from(Day01::new(read_file("inputs/Day01.txt"))),
+                Box::from(Day02::new(read_file("inputs/Day02.txt"))),
+                Box::from(Day03::new(read_file("inputs/Day03.txt"))),
+                Box::from(Day04::new(read_file("inputs/Day04.txt"))),
+                Box::from(Day05::new(read_file("inputs/Day05.txt"))),
+                Box::from(Day06::new(read_file("inputs/Day06.txt"))),
+                Box::from(Day07::new(read_file("inputs/Day07.txt"))),
             ];
-            let days = days.into_iter().enumerate();
+            let days = days.iter().enumerate();
             for (idx, day) in days {
                 let (part1_time, part1_result) = time(|| (*day).part1(), 1);
                 let (part2_time, part2_result) = time(|| (*day).part2(), 1);

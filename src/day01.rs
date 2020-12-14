@@ -5,12 +5,9 @@ pub struct Day01 {
     input: Vec<i64>,
 }
 
-impl crate::common::ProblemFactory for Day01 {
-    fn new(input_contents: &str) -> Day01 {
-        let input: Vec<i64> = input_contents
-            .lines()
-            .map(|l| l.parse::<i64>().unwrap())
-            .collect();
+impl Day01 {
+    pub fn new(input: String) -> Day01 {
+        let input: Vec<i64> = input.lines().map(|l| l.parse::<i64>().unwrap()).collect();
         Day01 { input }
     }
 }
