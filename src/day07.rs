@@ -1,24 +1,25 @@
 use crate::common::Problem;
-use itertools::Itertools;
 use regex::Regex;
 use std::collections::{HashMap, HashSet};
 
-pub struct Day07 {
-    input: String,
-    bags: HashMap<String, Vec<Bag>>,
-}
-
 #[derive(Eq, PartialEq, Hash, Debug)]
-pub struct Bag {
+struct BagRule {
+    parent: String,
     color: String,
     count: usize,
 }
 
-impl From<&str> for Bag {
-    fn from(s: &str) -> Self {
-        Bag {
-            count: s[0..1].parse().unwrap(),
+pub struct Day07 {
+    children: HashMap<String, Vec<BagRule>>,
+    parents: HashMap<String, Vec<String>>,
+}
+
+impl BagRule {
+    fn new(s: &str, parent: String) -> Self {
+        BagRule {
+            parent,
             color: s[2..].to_string(),
+            count: s[0..1].parse().unwrap(),
         }
     }
 }
@@ -26,57 +27,59 @@ impl From<&str> for Bag {
 impl Day07 {
     pub fn new(input: String) -> Self {
         let delimiters = Regex::new(r"( bags?,? ?|contain |\.)").unwrap();
-        let mut all_bags: HashMap<String, Vec<Bag>> = HashMap::new();
-
-        for line in input.lines() {
+        let mut parents = HashMap::new();
+        let mut children = HashMap::new();
+        input.lines().for_each(|line| {
             let mut parts = delimiters.split(line).filter(|&p| !p.is_empty());
             let container_bag_color = parts.next().unwrap();
 
-            for bag in parts
+            for rule in parts
                 .filter(|p| !p.starts_with("no other"))
-                .map_into::<Bag>()
+                .map(|s| BagRule::new(s, container_bag_color.to_string()))
             {
-                let parent_bag = Bag {
-                    color: container_bag_color.to_string(),
-                    count: bag.count,
-                };
-                match all_bags.get_mut(&bag.color) {
-                    Some(parents) => {
-                        parents.push(parent_bag);
-                    }
-                    None => {
-                        all_bags.insert(bag.color, vec![parent_bag]);
-                    }
-                }
-            }
-        }
+                let parent_vec = parents.entry(rule.color.clone()).or_insert(vec![]);
+                (*parent_vec).push(rule.parent.clone());
 
-        Day07 {
-            input,
-            bags: all_bags,
+                let child_vec = children.entry(rule.parent.clone()).or_insert(vec![]);
+                (*child_vec).push(rule);
+            }
+        });
+
+        Day07 { children, parents }
+    }
+
+    fn sum_bag(&self, bag: &str) -> usize {
+        match self.children.get(bag) {
+            None => 0,
+            Some(child_bags) => child_bags
+                .iter()
+                .fold(0, |acc, v| acc + v.count + v.count * self.sum_bag(&v.color)),
         }
     }
 }
 
 impl Problem for Day07 {
     fn part1(&self) -> String {
-        let mut to_visit = vec![];
-        let mut visited = HashSet::new();
+        let shiny_gold_parents = self.parents.get("shiny gold").unwrap();
 
-        to_visit.extend(self.bags.get("shiny gold").unwrap());
+        let mut to_visit = shiny_gold_parents.clone();
+        let mut visited = HashSet::new();
 
         while !to_visit.is_empty() {
             let bag = to_visit.pop().unwrap();
-            if let Some(bag_parents) = self.bags.get(&bag.color) {
-                to_visit.extend(bag_parents);
+
+            if let Some(bag_parents) = self.parents.get(&bag) {
+                for parent in bag_parents.iter() {
+                    to_visit.push(parent.to_string());
+                }
             }
-            visited.insert(&bag.color);
+            visited.insert(bag);
         }
 
         visited.len().to_string()
     }
 
     fn part2(&self) -> String {
-        String::new()
+        self.sum_bag("shiny gold").to_string()
     }
 }
