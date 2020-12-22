@@ -6,6 +6,7 @@ mod day04;
 mod day05;
 mod day06;
 mod day07;
+mod day08;
 
 use crate::day01::Day01;
 use crate::day02::Day02;
@@ -14,6 +15,7 @@ use crate::day04::Day04;
 use crate::day05::Day05;
 use crate::day06::Day06;
 use crate::day07::Day07;
+use crate::day08::Day08;
 use common::Problem;
 use std::time::Duration;
 
@@ -31,6 +33,7 @@ fn main() {
                 Box::from(Day05::new(read_file("inputs/Day05.txt"))),
                 Box::from(Day06::new(read_file("inputs/Day06.txt"))),
                 Box::from(Day07::new(read_file("inputs/Day07.txt"))),
+                Box::from(Day08::new(read_file("inputs/Day08.txt"))),
             ];
             let days = days.iter().enumerate();
             for (idx, day) in days {
